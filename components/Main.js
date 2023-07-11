@@ -76,7 +76,8 @@ export default function Main() {
 						document.getElementById(missedSquare.id).classList.add('selected-false')
 					})
 					setResult({result: 'loose', 
-					message:`You miss ${missedSquares.length===1?"a square":missedSquares.length " squares"} !`});
+					message:`You miss ${missedSquares.length===1?"a square" :
+					`${missedSquares.length} squares`} !`});
 					return
 				} else startTimer();
 			}
