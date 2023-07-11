@@ -85,7 +85,7 @@ export default function Main() {
 		roll()
 	}
 	function play(square) {
-		if (!result &&!square.isFreezed) {
+		if (!result && !square.isFreezed) {
 			const aFreezedSquare = squares.find(square => square.isFreezed)
 			if (aFreezedSquare) {
 				if (square.number === aFreezedSquare.number) {
@@ -133,7 +133,6 @@ export default function Main() {
 	function restart(mode) {
 		document.querySelectorAll('.square').forEach(square => square.classList.remove('selected-false'))
 		setResult(false);
-		console.log(mode)
 		setSquares(mode === "hard" ? [...squaresData, ...additionalSquares] : squaresData)
 		setTimer(false);
 		setDuration(0);
