@@ -4,9 +4,11 @@ import Score from './Score.js'
 import {squaresData, additionalSquares} from './squares.js'
 import Timer from './Timer.js'
 import ReactConfetti from 'react-confetti'
+
 let looseTimer,
 durationInterval,
 winMessageInterval;
+
 export default function Main() {
 	const [squares, setSquares] = React.useState(() => squaresData.map(square => (
 		{...square, number:1+Math.floor(Math.random()*6)}
@@ -19,6 +21,7 @@ export default function Main() {
 	const [mode, setMode] = React.useState('easy')
 	const [timer, setTimer] = React.useState(false)
 	const [result, setResult] = React.useState(false);
+	
 	React.useEffect(() => {
 		if (squares.every(square => square.isFreezed)) {
 			setResult({ result: 'win' });
@@ -35,19 +38,22 @@ export default function Main() {
 			setResult({result: 'loose', message: "Time Up!"})
 		}
 	},[timer])
+	
 	React.useEffect(() => {
 		clearInterval(looseTimer);
 		if (result.result === 'win') {
-			if (duration < highestScore[mode]||!highestScore[mode]) {
+			if (duration < highestScore[mode] || !highestScore[mode]) {
 				setHighestScore(prevScore => ({...prevScore, [mode]: duration}))
 				result.message = "New Highest Score"
 			}
 		}
 		clearInterval(durationInterval)
 	}, [result])
+	
 	React.useEffect(() => {
 		localStorage.setItem('highestScore', JSON.stringify(highestScore))
 	}, [highestScore])
+	
 	function chooseTheMode(theMode) {
 		if(theMode !== mode && (result || !squares.find(square => square.isFreezed))) {
 			setMode(theMode)
@@ -60,13 +66,17 @@ export default function Main() {
 		} else {
 			const freezedSquare = squares.find(square => square.isFreezed)
 			if (freezedSquare) {
-					const freezedNumber = freezedSquare.number
-				const missedSquare = squares.find(square => (
+				const freezedNumber = freezedSquare.number
+				const missedSquares = squares.filter(square => (
 					!square.isFreezed && square.number === freezedNumber
 				))
-				if (missedSquare) {
-					document.getElementById(missedSquare.id).classList.add('selected-false')
-					setResult({result: 'loose', message:"You miss a square!"});
+				if (missedSquares.length) {
+					console.log(missedSquares)
+					missedSquares.forEach ( missedSquare => {
+						document.getElementById(missedSquare.id).classList.add('selected-false')
+					})
+					setResult({result: 'loose', 
+					message:`You miss ${missedSquares.length===1?"a square":missedSquares.length " squares"} !`});
 					return
 				} else startTimer();
 			}
